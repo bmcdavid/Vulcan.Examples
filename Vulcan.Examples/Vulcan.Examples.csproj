@@ -220,6 +220,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -257,9 +258,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Pages\GeneralPageData.cs" />
     <Compile Include="PocoSearches.cs" />
     <Compile Include="Indexers\PostPocoIndexer.cs" />
-    <Compile Include="Models\Post.cs" />
+    <Compile Include="Models\Pocos\Post.cs" />
     <Compile Include="SiteSearch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

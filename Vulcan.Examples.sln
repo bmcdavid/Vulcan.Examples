@@ -5,6 +5,12 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vulcan.Examples", "Vulcan.Examples\Vulcan.Examples.csproj", "{15505140-09DD-4403-ABB7-3FD27B3AF031}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".git", ".git", "{2F1801C6-7323-4E50-B1CF-A091B329A794}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -262,6 +262,7 @@
     <Compile Include="PocoSearches.cs" />
     <Compile Include="Indexers\PostPocoIndexer.cs" />
     <Compile Include="Models\Pocos\Post.cs" />
+    <Compile Include="RangeSearches.cs" />
     <Compile Include="SiteSearch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

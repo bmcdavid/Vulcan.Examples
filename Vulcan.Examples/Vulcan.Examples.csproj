@@ -258,6 +258,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComplexSearches.cs" />
     <Compile Include="Models\Pages\GeneralPageData.cs" />
     <Compile Include="PocoSearches.cs" />
     <Compile Include="Indexers\PostPocoIndexer.cs" />

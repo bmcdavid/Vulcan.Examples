@@ -2,8 +2,10 @@
 {
     using EPiServer;
     using EPiServer.Core;
+    using Nest;
     using System;
     using System.Linq;
+    using System.Web;
     using TcbInternetSolutions.Vulcan.Core;
     using TcbInternetSolutions.Vulcan.Core.Extensions;
 
@@ -65,6 +67,59 @@
             int maxResults = 10;
 
             var siteHits = client.GetSearchHits(searchText, currentPage, maxResults, includeTypes: typesToSearchFor);
+        }
+
+        /// <summary>
+        /// Overload og GetHits example, using a custom QueryContainer
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="page"></param>
+        public void SearchContentCustomQueryContainer(string query = "", int pageSize = 10, int page = 1)
+        {
+            var typesToSearchFor = typeof(MediaData).GetSearchTypesFor();
+            var client = _VulcanHandler.GetClient();
+            QueryContainer searchTextQuery = new QueryContainerDescriptor<IContent>();
+
+            // only add query string if query has value
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                searchTextQuery = new QueryContainerDescriptor<IContent>().SimpleQueryString(sqs => sqs
+                    .Fields(f => f
+                                .AllAnalyzed()
+                                //.FieldAnalyzed(x => x.Name)  //  could be field specific too, or just use above for all analyzed strings
+                                .Field($"{VulcanFieldConstants.MediaContents}.content")
+                                .Field($"{VulcanFieldConstants.MediaContents}.content_type"))
+                    .Query(query)
+                );
+            }
+
+            // also using a workaround for FilterForPublished
+            var siteHits = client.GetSearchHits(FilterForPublished<IContent>(searchTextQuery), page, pageSize, includeTypes: typesToSearchFor);
+            string requestString, responseString;
+
+            // For debugging request and response body, set "system.web/compilation" debug to true!
+            if (HttpContext.Current.IsDebuggingEnabled && siteHits.ResponseContext.ApiCall.RequestBodyInBytes != null && siteHits.ResponseContext.ApiCall.ResponseBodyInBytes != null)
+            {
+                requestString = System.Text.Encoding.UTF8.GetString(siteHits.ResponseContext.ApiCall.RequestBodyInBytes);
+                responseString = System.Text.Encoding.UTF8.GetString(siteHits.ResponseContext.ApiCall.ResponseBodyInBytes);
+            }
+        }
+
+        /// <summary>
+        /// Workaround for image searches that have no expiration date, now includes a Missing filter
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public static QueryContainer FilterForPublished<T>(QueryContainer query) where T : class, IContent
+        {
+            var notDeleted = new QueryContainerDescriptor<T>().Term(t => t.Field(xf => xf.IsDeleted).Value(false));
+            var published = new QueryContainerDescriptor<T>().DateRange(dr => dr.LessThanOrEquals(DateTime.Now).Field(xf => (xf as IVersionable).StartPublish));
+            var notExpired = new QueryContainerDescriptor<T>().DateRange(dr => dr.GreaterThanOrEquals(DateTime.Now).Field(xf => (xf as IVersionable).StopPublish));
+            var notExpiredMissing = new QueryContainerDescriptor<T>().Missing(dr => dr.Field(xf => (xf as IVersionable).StopPublish).NullValue().Existence());
+
+            return new QueryContainerDescriptor<T>().Bool(b => b.Must(query).Filter(notDeleted && published && (notExpired || notExpiredMissing)));
         }
     }
 }

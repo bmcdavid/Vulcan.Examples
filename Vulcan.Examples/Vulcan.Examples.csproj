@@ -221,6 +221,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -259,6 +260,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComplexSearches.cs" />
+    <Compile Include="Indexing\ContentUtility.cs" />
+    <Compile Include="Indexing\IndexContentType.cs" />
     <Compile Include="Models\Pages\GeneralPageData.cs" />
     <Compile Include="PocoSearches.cs" />
     <Compile Include="Indexers\PostPocoIndexer.cs" />
